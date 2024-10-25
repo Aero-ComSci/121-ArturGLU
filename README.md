@@ -15,7 +15,22 @@ def stamp(self, turtle):
         turtle.fillcolor(original_color)  
 
 ## How does this work? 
-This was the stamp function which left a copy of the shape (spot or box) every time that it got moved to another position. 
+This stamp() function temporarily changes the color of a turtle shapes, creates a visual stamp (copy) of it, and then changes back to the original color. First, I stored the current fill color by using the original_color to fill the turtle. Then, it selects a new random color from the colors list (that I created in the initialization part of the code) and applies that color. After that it uses turtle.stamp() to create a stamp of the turtle’s shape. Finally, the function resets the turtle’s fill color back to the original. This function got initiated in the update_score_for_spot and the update_score_for_box functions because it needed to stamp whenever a shape was clicked, which is when the update_score functions were activated aswell, so I put it into there. 
+
+
+## Second Code Snapshot
+
+
+
+
+
+
+
+
+
+
+
+## How does this work?
 
 
 
