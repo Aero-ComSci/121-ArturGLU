@@ -1,21 +1,21 @@
 import turtle as t
 import random as rand
 
+#-----Game settings-----
+timer = 20
 score = 0
-
-t.bgcolor("lightblue")
-
-font_setup = ("Arial", 20, "normal")
-
-timer = 5
 counter_interval = 1000   
 timer_up = False
 
 colors = ["blue", "red", "green", "yellow", "purple", "orange"]
+sizes = [0.5, 1, 1.5, 2, 2.5, 3]
+
+font_setup = ("Arial", 20, "normal")
 
 #-----game configuration----
 class Game: 
-    def __init__(self):
+
+    def start_game(self):
         self.spot = t.Turtle()
         self.spot.shape("circle")
         self.spot.shapesize(3)
@@ -36,19 +36,14 @@ class Game:
         self.score_writer = t.Turtle()
         self.score_writer.penup()
         self.score_writer.goto(0, 300)
+        self.score_writer.write(score, font=font_setup)
 
         self.counter = t.Turtle()
         self.counter.penup()
         self.counter.goto(-300, 300)
+        self.counter.write("Timer: " + str(timer), font=font_setup)
 
-        self.countdown()
-
-    def change_color_and_stamp(self, turtle):
-        original_color = turtle.fillcolor()  
-        new_color = rand.choice(colors)  
-        turtle.fillcolor(new_color)  
-        turtle.stamp() 
-        turtle.fillcolor(original_color)  
+        self.timer_started = False  
 
     #-----game functions-----
     def countdown(self):
@@ -63,10 +58,21 @@ class Game:
             timer -= 1
             t.ontimer(self.countdown, counter_interval)
 
+    def stamp(self, turtle):
+        original_color = turtle.fillcolor()  
+        new_color = rand.choice(colors)  
+        turtle.fillcolor(new_color)  
+        turtle.stamp() 
+        turtle.fillcolor(original_color)  
+
     def change_position(self, turtle):
         new_xpos = rand.randint(-200, 200)
         new_ypos = rand.randint(-200, 200)
         turtle.goto(new_xpos, new_ypos)
+    
+    def change_size(self, turtle):
+        new_size = rand.choice(sizes) 
+        turtle.shapesize(new_size)  
 
     def update_score_for_spot(self, x, y):
         global score, timer_up
@@ -74,10 +80,15 @@ class Game:
             return  
         score += 1
         print("Score:", score)
-        self.change_color_and_stamp(self.spot) 
+        self.stamp(self.spot) 
         self.change_position(self.spot)  
         self.score_writer.clear()
         self.score_writer.write(score, font=font_setup)
+        self.change_size(self.spot)
+
+        if not self.timer_started:  
+            self.timer_started = True
+            self.countdown()
 
     def update_score_for_box(self, x, y):
         global score, timer_up
@@ -85,15 +96,21 @@ class Game:
             return  
         score += 1
         print("Score:", score)
-        self.change_color_and_stamp(self.box)  #
+        self.stamp(self.box)  
         self.change_position(self.box) 
         self.score_writer.clear()
         self.score_writer.write(score, font=font_setup)
+        self.change_size(self.box)
+
+        if not self.timer_started:  
+            self.timer_started = True
+            self.countdown()
 
     def end_game(self):
         self.spot.hideturtle() 
         self.box.hideturtle()   
         self.score_writer.clear()
+        self.counter.clear()
         self.score_writer.goto(0, 0)
         self.score_writer.write(f"Final Score: {score}", align="center", font=font_setup)
 
@@ -102,6 +119,7 @@ def main():
     global wn
     wn = t.Screen()
     game = Game()
+    game.start_game()
     wn.mainloop()
 
 main()
